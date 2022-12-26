@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameEnd : MonoBehaviour
+public class GameEnd : Singleton<GameEnd>
 {
     bool won = false;
     

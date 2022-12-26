@@ -1,40 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    private static int pelletCount = 0;
-    public static GameEnd endgame;
-    static GameManager instance;
+    private GameEnd endGameScreen;
+    const int PelletsNumber=50;
     void Start()
     {
-        if (instance != null) Destroy(gameObject);
-        instance=this;
-        endgame = GameObject.Find("Gameend").transform.GetChild(0).GetComponent<GameEnd>() ;
         Time.timeScale = 0;
-        DontDestroyOnLoad(gameObject);
+        endGameScreen=GameEnd.Instance;
+        endGameScreen.enabled=false;
     }
 
-    public static void RemovePellet()
+    public void RemovePellet()
     {
-        pelletCount--;
-        pelletcounter.PelletCount = pelletCount;
-        if (pelletCount == 0)
+        pelletcounter.Instance.PelletCount--;
+        if (pelletcounter.Instance.PelletCount == 0)
         {
-            endgame.Win();
+            endGameScreen.enabled=true;
+            endGameScreen.Win();
         }
     }
-    public static void AddPellet()
+    public void AddPellet()
     {
-        if (pelletCount >= 500) return;
-        pelletCount++;
-        pelletcounter.PelletCount = pelletCount;
+        if (pelletcounter.Instance.PelletCount >= PelletsNumber) return;
+        pelletcounter.Instance.PelletCount++;
     }
-    public static void StartGame()
+    public void StartGame()
     {
         Time.timeScale = 1;
     }
-   
+    
 }

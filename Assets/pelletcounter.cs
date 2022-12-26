@@ -1,29 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class pelletcounter : MonoBehaviour
+/// <summary>
+/// Manages number of pellets
+/// </summary>
+public class pelletcounter : Singleton<pelletcounter>
 {
-    static int pelletCount=0;
+    int pelletCount=0;
     [SerializeField]
-    static Text pelletCountText;
-    static GameObject instance;
-    public static int PelletCount { get { return pelletCount; } set
+    Text pelletCountText;
+    /// <summary>
+    /// get or set current amount of pellets needed to win game
+    /// </summary>
+    /// <value></value>
+    public int PelletCount { get { return pelletCount; } set
         {
             pelletCountText.text = value.ToString();
             pelletCount = value;
         } }
-    void Awake()
-    {
-        
-        if (instance != null)
-        {
-            Destroy(transform.parent.gameObject);
-            return;
-        }
-        instance = gameObject.transform.parent.gameObject;
-        pelletCountText = GetComponent<Text>();
-        DontDestroyOnLoad(gameObject.transform.parent);
-    }
 }

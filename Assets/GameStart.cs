@@ -11,7 +11,7 @@ public class GameStart : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            GameManager.StartGame();
+            GameManager.Instance.StartGame();
             GetComponent<Text>().enabled = false;
             this.enabled = false;
 

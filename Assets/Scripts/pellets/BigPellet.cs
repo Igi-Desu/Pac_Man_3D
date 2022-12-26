@@ -6,7 +6,7 @@ public class BigPellet : pellet
 {
     public delegate void ScareGhosts(Ghost.State state);
     public static event ScareGhosts ghostEvent;
-    public override IEnumerator die()
+    public override IEnumerator GetEaten()
     {
         Destroy(gameObject);
         yield return null;

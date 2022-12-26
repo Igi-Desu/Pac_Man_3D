@@ -8,7 +8,7 @@ public class PelletEating : MonoBehaviour
         if(collision.transform.tag=="Pellet"){
             pellet pelletscript = collision.GetComponent<pellet>();
             if (pelletscript == null) return;
-           StartCoroutine(collision.gameObject.GetComponent<pellet>().die());
+            StartCoroutine(collision.gameObject.GetComponent<pellet>().GetEaten());
             return;
         }
     }

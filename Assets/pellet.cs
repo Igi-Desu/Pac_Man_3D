@@ -6,11 +6,11 @@ public class pellet : MonoBehaviour
 {
     void Start()
     {
-        GameManager.AddPellet();
+        GameManager.Instance.AddPellet();
     }
-    public virtual IEnumerator die(){
+    public virtual IEnumerator GetEaten(){
         GetComponent<BoxCollider>().enabled = false;
-        GameManager.RemovePellet();
+        GameManager.Instance.RemovePellet();
         GetComponent<SpriteRenderer>().enabled=false;
         GetComponent<AudioSource>().Play();
         yield return new WaitForSeconds(1.25f);
