@@ -4,19 +4,30 @@ using UnityEngine;
 
 public class Ghost : MonoBehaviour
 {
-    [SerializeField]protected GhostEyes eyes;
-    [SerializeField]protected GameObject eyesobject;
+    protected GhostEyes eyes;
+    protected GameObject eyesObject;
+    /// <summary>
+    ///  Position where ghost goes in scatter state
+    /// </summary>
     [SerializeField] protected Transform scatterTarget;
+
     [SerializeField] protected Transform playerTarget;
     protected Transform target;
     [SerializeField] protected AnimatedSprite ghostanim;
     static protected List<Sprite> normalGhostSprites = new();
     static protected List<Sprite> afraidGhostSprites = new();
     protected SpriteRenderer ghostSprite;
+    /// <summary>
+    /// Base color of ghost
+    /// </summary>
     protected Color ghostColor;
-[SerializeField]Transform basePosition;
+    /// <summary>
+    /// Place where ghost starts game (should refer to the position of ghost house 
+    /// in the middle of map)
+    /// </summary>
+    static Transform basePosition=null;
 
-   public enum State
+    public enum State
     {
         chase,
         scatter,
@@ -28,36 +39,48 @@ public class Ghost : MonoBehaviour
     float timer = 0f;
     Coroutine timerCor = null;
 
-    public float Timer { get => timer; set {
+    public float Timer
+    {
+        get => timer; set
+        {
             timer = value;
             timerCor = StartCoroutine(StartTimer());
-        } }
+        }
+    }
 
 
     protected void Start()
     {
-        if(afraidGhostSprites.Count==0){
+        if(basePosition==null){
+            basePosition = GameObject.Find("MiddleOfGhostHouse").transform;
+        }
+        eyes = transform.Find("Sprite/Eyes").GetComponent<GhostEyes>();
+        Debug.Log(eyes);
+        eyesObject = eyes.gameObject;
+        if (afraidGhostSprites.Count == 0)
+        {
             LoadSprites();
         }
         transform.position = basePosition.position;
-        ghostSprite = transform.parent.Find("Sprite").transform.GetComponent<SpriteRenderer>();
+        ghostSprite = transform.Find("Sprite").transform.GetComponent<SpriteRenderer>();
         ghostColor = ghostSprite.color;
         movScript = GetComponent<Movement>();
         movScript.changeDirEvent += eyes.changeEyes;
         ChangeState(State.chase);
-        Invoke("SetDirOnStart", Random.Range(2,8));
+        Invoke("SetDirOnStart", UnityEngine.Random.Range(2, 8));
         Timer = 10;
         BigPellet.ghostEvent += ChangeState;
     }
 
-    void LoadSprites(){
-        afraidGhostSprites=new List<Sprite>((Resources.LoadAll<Sprite>("Sprites/Ghost/GhostAfraid")));
-        normalGhostSprites=new List<Sprite>((Resources.LoadAll<Sprite>("Sprites/Ghost/GhostNormal")));
+    void LoadSprites()
+    {
+        afraidGhostSprites = new List<Sprite>((Resources.LoadAll<Sprite>("Sprites/Ghost/GhostAfraid")));
+        normalGhostSprites = new List<Sprite>((Resources.LoadAll<Sprite>("Sprites/Ghost/GhostNormal")));
         //TODO add log warning if the sprites are still empty after loading
     }
 
 
- protected void SetDirOnStart()
+    protected void SetDirOnStart()
     {
         movScript.SetDirection(Vector2.up);
     }
@@ -82,10 +105,10 @@ public class Ghost : MonoBehaviour
     }
     protected Vector2 ClydeAlg(Node n)
     {
-        Vector2 curdir = Vector2.zero ;
+        Vector2 curdir = Vector2.zero;
         if (n.whereWeCanGo.Count != 1)
         {
-            int index = Random.Range(0,n.whereWeCanGo.Count);
+            int index = UnityEngine.Random.Range(0, n.whereWeCanGo.Count);
             if (n.whereWeCanGo[index] == movScript.moveDirection * -1)
             {
                 index = (index + 1 == n.whereWeCanGo.Count) ? 0 : index + 1;
@@ -105,7 +128,7 @@ public class Ghost : MonoBehaviour
                 Timer = 3;
                 movScript.speed = basespeed * 0.5f;
                 ghostanim.sprites = afraidGhostSprites;
-                eyesobject.SetActive(false);
+                eyesObject.SetActive(false);
                 eyes.enabled = false;
                 ghostSprite.color = Color.white;
                 break;
@@ -113,7 +136,7 @@ public class Ghost : MonoBehaviour
                 target = playerTarget;
                 movScript.speed = basespeed;
                 ghostanim.sprites = normalGhostSprites;
-                eyesobject.SetActive(true);
+                eyesObject.SetActive(true);
                 eyes.enabled = true;
                 ghostSprite.color = ghostColor;
                 break;
@@ -137,14 +160,14 @@ public class Ghost : MonoBehaviour
         {
             StartCoroutine(BlinkCor());
         }
-       
+
         while (timer > 0)
         {
             timer -= Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
         NextState();
-      }
+    }
     IEnumerator BlinkCor()
     {
         while (true)

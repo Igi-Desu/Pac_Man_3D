@@ -3,7 +3,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     private GameEnd endGameScreen;
-    const int PelletsNumber=50;
+    const int PelletsNumber=500;
     void Start()
     {
         Time.timeScale = 0;
