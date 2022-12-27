@@ -6,18 +6,15 @@ public class Ghost : MonoBehaviour
 {
     [SerializeField]protected GhostEyes eyes;
     [SerializeField]protected GameObject eyesobject;
-    protected Transform target;//current target
     [SerializeField] protected Transform scatterTarget;
     [SerializeField] protected Transform playerTarget;
+    protected Transform target;
     [SerializeField] protected AnimatedSprite ghostanim;
-    [SerializeField] protected Sprite[] normalghost;
-    [SerializeField] protected Sprite[] afraidghost;
-    [SerializeField] protected SpriteRenderer ghostSprite;
+    static protected List<Sprite> normalGhostSprites = new();
+    static protected List<Sprite> afraidGhostSprites = new();
+    protected SpriteRenderer ghostSprite;
     protected Color ghostColor;
-    
-
-   
-    [SerializeField] Vector3 basePosition;
+[SerializeField]Transform basePosition;
 
    public enum State
     {
@@ -25,11 +22,12 @@ public class Ghost : MonoBehaviour
         scatter,
         afraid,
     }
-   public State currentstate;
+    public State currentstate;
     public float basespeed = 6;
     protected Movement movScript;
-    float timer = 5f;
+    float timer = 0f;
     Coroutine timerCor = null;
+
     public float Timer { get => timer; set {
             timer = value;
             timerCor = StartCoroutine(StartTimer());
@@ -38,7 +36,10 @@ public class Ghost : MonoBehaviour
 
     protected void Start()
     {
-        basePosition = transform.position;
+        if(afraidGhostSprites.Count==0){
+            LoadSprites();
+        }
+        transform.position = basePosition.position;
         ghostSprite = transform.parent.Find("Sprite").transform.GetComponent<SpriteRenderer>();
         ghostColor = ghostSprite.color;
         movScript = GetComponent<Movement>();
@@ -48,6 +49,14 @@ public class Ghost : MonoBehaviour
         Timer = 10;
         BigPellet.ghostEvent += ChangeState;
     }
+
+    void LoadSprites(){
+        afraidGhostSprites=new List<Sprite>((Resources.LoadAll<Sprite>("Sprites/Ghost/GhostAfraid")));
+        normalGhostSprites=new List<Sprite>((Resources.LoadAll<Sprite>("Sprites/Ghost/GhostNormal")));
+        //TODO add log warning if the sprites are still empty after loading
+    }
+
+
  protected void SetDirOnStart()
     {
         movScript.SetDirection(Vector2.up);
@@ -76,7 +85,7 @@ public class Ghost : MonoBehaviour
         Vector2 curdir = Vector2.zero ;
         if (n.whereWeCanGo.Count != 1)
         {
-            int index = RngGenerator.GetRandomIntUniform(0, n.whereWeCanGo.Count);
+            int index = Random.Range(0,n.whereWeCanGo.Count);
             if (n.whereWeCanGo[index] == movScript.moveDirection * -1)
             {
                 index = (index + 1 == n.whereWeCanGo.Count) ? 0 : index + 1;
@@ -95,7 +104,7 @@ public class Ghost : MonoBehaviour
             case State.afraid:
                 Timer = 3;
                 movScript.speed = basespeed * 0.5f;
-                ghostanim.sprites = afraidghost;
+                ghostanim.sprites = afraidGhostSprites;
                 eyesobject.SetActive(false);
                 eyes.enabled = false;
                 ghostSprite.color = Color.white;
@@ -103,7 +112,7 @@ public class Ghost : MonoBehaviour
             case State.chase:
                 target = playerTarget;
                 movScript.speed = basespeed;
-                ghostanim.sprites = normalghost;
+                ghostanim.sprites = normalGhostSprites;
                 eyesobject.SetActive(true);
                 eyes.enabled = true;
                 ghostSprite.color = ghostColor;
@@ -117,7 +126,7 @@ public class Ghost : MonoBehaviour
     public void KillGhost()
     {
         movScript.resetDirection();
-        transform.position = basePosition;
+        transform.position = basePosition.position;
         Invoke("SetDirOnStart", 2);
         ChangeState(State.chase);
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class AnimatedSprite : MonoBehaviour
 {
     [SerializeField] float speed;
-    public Sprite[] sprites;
+    public List<Sprite> sprites;
     SpriteRenderer spriteRenderer;
     float timer;
     int index=0;
@@ -21,7 +21,7 @@ public class AnimatedSprite : MonoBehaviour
         if (timer < 0)
         {
             timer = speed;
-            index = (index + 1 < sprites.Length) ? index + 1 : 0;
+            index = (index + 1 < sprites.Count) ? index + 1 : 0;
             spriteRenderer.sprite = sprites[index];
         }
     }
