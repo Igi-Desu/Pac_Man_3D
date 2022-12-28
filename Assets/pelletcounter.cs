@@ -7,8 +7,7 @@ using UnityEngine.UI;
 public class pelletcounter : Singleton<pelletcounter>
 {
     int pelletCount=0;
-    [SerializeField]
-    Text pelletCountText;
+    [SerializeField]Text pelletCountText;
     /// <summary>
     /// get or set current amount of pellets needed to win game
     /// </summary>

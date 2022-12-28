@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Represent specialnode that needs to be connected to other one manually 
+/// i.e node that is connected by teleport to another
+/// </summary>
 public class SpecialNode : Node
 {
     [SerializeField]Node secondone;

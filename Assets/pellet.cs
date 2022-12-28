@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class pellet : MonoBehaviour
@@ -8,6 +7,9 @@ public class pellet : MonoBehaviour
     {
         GameManager.Instance.AddPellet();
     }
+    /// <summary>
+    /// Eats pellet, plays sound then destroys object
+    /// </summary>
     public virtual IEnumerator GetEaten(){
         GetComponent<BoxCollider>().enabled = false;
         GameManager.Instance.RemovePellet();

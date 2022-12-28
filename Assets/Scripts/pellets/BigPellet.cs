@@ -1,22 +1,22 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class BigPellet : pellet
 {
     public delegate void ScareGhosts(Ghost.State state);
-    public static event ScareGhosts ghostEvent;
+    /// <summary>
+    /// makes all ghosts go into afraid
+    /// </summary>
+    public static event ScareGhosts MakeGhostsAfraid;
     public override IEnumerator GetEaten()
     {
         Destroy(gameObject);
         yield return null;
     }
+    /// <summary>
+    /// When big pellets gets eaten make ghosts afraid
+    /// </summary>
     void OnDestroy()
     {
-        if (ghostEvent != null)
-        {
-            ghostEvent(Ghost.State.afraid);
-        }
-        
+        MakeGhostsAfraid?.Invoke(Ghost.State.afraid);
     }
 }
