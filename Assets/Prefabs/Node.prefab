@@ -73,10 +73,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathnode:
     node: {fileID: 0}
-    hcost: 0
-    gcost: 0
-    fcost: 0
-  collisionLayer:
+    hCost: 0
+    gCost: 0
+    fCost: 0
+    fromwheredir: {x: 0, y: 0}
+  walls:
     serializedVersion: 2
     m_Bits: 64
   nodeMask:

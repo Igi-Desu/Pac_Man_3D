@@ -1,39 +1,46 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class IggyAI : Ghost
 {
-
+    /// <summary>
+    /// List of directions needed to take on every turn to reach pacman
+    /// </summary>
     List<Vector2> directions = new List<Vector2>();
-    //Ghost that uses A* pathfinding algorithm
+
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Node n = collision.GetComponent<Node>();
         if(n==null)return;
-        PathFinding.startnode = n.pathnode;
-        if (currentstate == State.afraid)
+        if (currentState == State.afraid)
         {
             Vector2 curdir = ClydeAlg(n);
-            movScript.SetDirection(curdir);
+            moveScript.SetDirection(curdir);
             return;
         }
-        directions = PathFinding.FindPath(PathFinding.startnode, PathFinding.finishnode);
+        try{
+            directions = PathFinding.Instance.FindPath(n, Player.Instance.CurrentNode);
+        }
+        catch(Exception e){
+            Debug.LogError(e.Message);
+            Destroy(gameObject);
+        }
         if (directions.Count == 0)
         {
-         //   Debug.Log("why is that");
-            Vector2 dir = ((Vector2)target.position - (Vector2)n.transform.position).normalized;
-            Vector2Int movementvector = new(Mathf.RoundToInt(dir.x), Mathf.RoundToInt(dir.y));
-            movScript.SetDirection(movementvector);
+            Vector2 dir = BlinkyAlgorithm(n,target.position+target.forward);
+            moveScript.SetDirection(dir);
             return;
         }
-        //move with the ways 
-        Move();
+
+        MoveUsingPathFindingDir();
     }
-    void Move()
+
+
+    void MoveUsingPathFindingDir()
     {
-        //Debug.Log($"moving to {directions[0]}");
-        movScript.SetDirection(directions[0]);
+        moveScript.SetDirection(directions[0]);
         directions.RemoveAt(0);
     }
 }

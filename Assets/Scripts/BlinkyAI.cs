@@ -11,15 +11,15 @@ public class BlinkyAI : Ghost
         if (n == null) return;
         Vector2 curdir=Vector2.zero;
         //fcompare every direction ghost can go with pacman position to find optimal one
-        if (currentstate == State.afraid)
+        if (currentState == State.afraid)
         {
             curdir = ClydeAlg(n);
         }
         else
         {
-            curdir = BlinkyAlgorithm(n, target.position + target.forward);
+            curdir = BlinkyAlgorithm(n, target.position+target.forward);
         }
         //set movement direction of ghost
-        movScript.SetDirection(curdir);
+        moveScript.SetDirection(curdir);
     }
 }

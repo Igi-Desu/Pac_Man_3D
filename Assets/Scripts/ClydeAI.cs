@@ -9,12 +9,12 @@ public class ClydeAI : Ghost
         Node n = collision.GetComponent<Node>();
         if (n == null) return;
         Vector2 curdir = Vector2.zero;
-        if (currentstate == State.scatter)
+        if (currentState == State.scatter)
         {
             curdir = BlinkyAlgorithm(n, target.position);
         }
         //if ghost is further than 7 get random direction
-        else if ((target.position - transform.position).sqrMagnitude > 100||currentstate==State.afraid)
+        else if ((target.position - transform.position).sqrMagnitude > 100||currentState==State.afraid)
         {
             curdir = ClydeAlg(n);
         }
@@ -22,7 +22,7 @@ public class ClydeAI : Ghost
         {
             curdir = BlinkyAlgorithm(n,target.position);
         }
-        movScript.SetDirection(curdir);
+        moveScript.SetDirection(curdir);
     }
 
 

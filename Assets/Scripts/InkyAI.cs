@@ -9,15 +9,15 @@ public class InkyAI : Ghost
         Node n = collision.GetComponent<Node>();
         if (n == null) return;
         Vector2 curdir = Vector2.zero;
-        if (currentstate == State.afraid)
+        if (currentState == State.afraid)
         {
             curdir = ClydeAlg(n);
         }
         else
         {
-            curdir = BlinkyAlgorithm(n, target.position + target.forward * 10+target.up*5);
+            curdir = BlinkyAlgorithm(n, target.position);
         }
-        movScript.SetDirection(curdir);
+        moveScript.SetDirection(curdir);
     }
 
 
