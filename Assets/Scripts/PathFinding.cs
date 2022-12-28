@@ -103,7 +103,7 @@ public class PathFinding : MonoBehaviour
                         lowestcost = node.node.pathnode.fcost;
                     }
                 }
-                currentnode = nodeList[RngGenerator.GetRandomIntUniform(0, nodeList.Count)];
+                currentnode = nodeList[Random.Range(0,nodeList.Count)];
             }
         }
         //if we search everything and don't find a path

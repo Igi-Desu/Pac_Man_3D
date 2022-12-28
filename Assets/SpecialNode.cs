@@ -12,6 +12,6 @@ public class SpecialNode : Node
     }
     void setup(){
     whereWeCanGo.Add(direction);
-    neightbourNodes.Add(new NeighbourNode(secondone,0));
+    neightbourNodes.Add(new NeighbourNode(secondone,2));
     }
 }

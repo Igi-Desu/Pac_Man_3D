@@ -74,22 +74,22 @@ public class Player : MonoBehaviour
         }
         if (collision.transform.tag == "wall1")
         {
-            playercamera.RotateTowards(new Vector3(0, 0, 0));
+            playercamera.SmoothRotateTowards(new Vector3(0, 0, 0));
             return;
         }
         if (collision.transform.tag == "wall2")
         {
-            playercamera.RotateTowards(new Vector3(0, -90, 0));
+            playercamera.SmoothRotateTowards(new Vector3(0, -90, 0));
             return;
         }
         if (collision.transform.tag == "wall3")
         {
-            playercamera.RotateTowards(new Vector3(0, 90, 0));
+            playercamera.SmoothRotateTowards(new Vector3(0, 90, 0));
             return;
         }
         if (collision.transform.tag == "wall4")
         {
-            playercamera.RotateTowards(new Vector3(0, 180, 0));
+            playercamera.SmoothRotateTowards(new Vector3(0, 180, 0));
             return;
         }
     }

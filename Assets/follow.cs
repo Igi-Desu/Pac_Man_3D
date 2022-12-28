@@ -5,9 +5,8 @@ using UnityEngine;
 public class follow : MonoBehaviour
 {
     public Transform target;
-
-
-    // Update is called once per frame
+    
+    //TODO unspaghetti this
     void Update()
     {
         TranslatePosition();
@@ -21,7 +20,7 @@ public class follow : MonoBehaviour
             transform.SetPositionAndRotation(new Vector3(-15,target.position.y,(-target.position.x)-15), Quaternion.Euler(0,90,transform.rotation.eulerAngles.z));
             return;
         }
-         if(target.position.x>=15&&target.position.x<=45){
+        if(target.position.x>=15&&target.position.x<=45){
             transform.SetPositionAndRotation(new Vector3(15,target.position.y,(target.position.x)-15), Quaternion.Euler(0,-90,transform.rotation.eulerAngles.z));
             return;
         }
