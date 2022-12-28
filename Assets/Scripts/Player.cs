@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
-public class Player : MonoBehaviour
+public class Player : Singleton<Player>
 {
+    Node currentNode=null;
+    /// <summary>
+    /// returns current node pacman is at 
+    /// </summary>
+    public Node CurrentNode => currentNode;
     Movement moveScript;
     [SerializeField]GameObject spriteObject;
     [SerializeField] public InputPlayer controls;
     [SerializeField]CameraFollow playercamera;
-    float timer = 0.5f;
     System.Action<InputAction.CallbackContext> horizontalMove, verticalMove;
 
     //   Rigidbody2D rb;
@@ -59,12 +63,12 @@ public class Player : MonoBehaviour
         {
             Node n = collision.GetComponent<Node>();
             if (n == null) return;
-            PathFinding.finishnode = n.pathnode;
+            currentNode=n;
             return;
         }
         if(collision.transform.tag=="Ghost"){
             Ghost ghostScript = collision.transform.GetComponent<Ghost>();
-            if (ghostScript.currentstate == Ghost.State.afraid)
+            if (ghostScript.currentState == Ghost.State.afraid)
             {
                 ghostScript.KillGhost();             
                 return;
