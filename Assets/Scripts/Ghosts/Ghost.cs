@@ -85,9 +85,12 @@ public class Ghost : MonoBehaviour
         normalGhostSprites = new List<Sprite>((Resources.LoadAll<Sprite>("Sprites/Ghost/GhostNormal")));
     }
 
-
+    /// <summary>
+    /// Sets direction so that ghost leaves house after a moment
+    /// </summary>
     protected void SetDirOnStart()
     {
+        moveScript.enabled=true;
         moveScript.SetDirection(Vector2.up);
     }
     /// <summary>
@@ -210,6 +213,7 @@ public class Ghost : MonoBehaviour
     {
         moveScript.resetDirection();
         transform.position = basePosition.position;
+        moveScript.enabled=false;
         Invoke("SetDirOnStart", 2);
         ChangeState(State.chase);
     }

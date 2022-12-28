@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Movement : MonoBehaviour
@@ -11,7 +9,6 @@ public class Movement : MonoBehaviour
     public event ChangeDirAction changeDirEvent;
     public Vector2 moveDirection { get; private set; }
     public Vector2 nextDirection { get; private set; }
-    bool block = false;
     protected void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -27,23 +24,18 @@ public class Movement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-       //Debug.Log($"direction = {moveDirection}");
-      //  Debug.Log($"nextdirection = {nextDirection}");
         rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
     }
     public void resetDirection()
     {
-        block = true;
         moveDirection = Vector2.zero;
-        Invoke("changeBlock", 1);
     }
-    void changeBlock()
-    {
-        block = false;
-    }
+    /// <summary>
+    /// Sets direction objects goes, uf object can't go in given direction
+    /// </summary>
+    /// <param name="direction"></param>
     public void SetDirection(Vector2 direction)
     {
-        if (block) return;
         if (direction == Vector2.zero)
         {
             return;
@@ -60,14 +52,14 @@ public class Movement : MonoBehaviour
         }
         else
         {
-          //  Debug.Log("Ale jak to");
             nextDirection = direction;
         }
     }
-    //returns true if we can go this way
-    //returns false if we can't go this way
-    //@param
-    //direction - they way we are going.
+    /// <summary>
+    /// checks wether object can go in given direction
+    /// </summary>
+    /// <param name="direction">direction object is trying go</param>
+    /// <returns>true if possible false otherwise</returns>
    public bool CheckDirection(Vector2 direction)
     {
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, Vector2.one*.65f, .0f, direction, 0.5f, collisionLayer);
@@ -79,7 +71,6 @@ public class Movement : MonoBehaviour
             return;
         }
         if(other.transform.tag=="LeftTP"){
-            //tp to the right
               transform.position=new Vector3(75,transform.position.y,transform.position.z);
             return;
         }
