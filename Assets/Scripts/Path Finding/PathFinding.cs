@@ -15,7 +15,7 @@ public class PathFinding : Singleton<PathFinding>
     /// <returns>list of directions objects need to take to arrive at finish node</returns>
     public List<Vector2> FindPath(Node start, Node finish)
     {
-        if(start==null||finish==null)return new List<Vector2>();
+        if (start == null || finish == null) return new List<Vector2>();
         if (start == finish) return new List<Vector2>();
         //closed list represents nodes already searched
         List<PathNode> closedList = new List<PathNode>();
@@ -23,11 +23,12 @@ public class PathFinding : Singleton<PathFinding>
         List<PathNode> openList = new List<PathNode>();
         start.pathnode.hCost = CalculatHCost(start.transform.position, finish.transform.position);
         start.pathnode.fCost = start.pathnode.hCost;
+        start.pathnode.gCost = 0;
         //Actual lowest cost
         int lowestcost = int.MaxValue;
         //currentnode we are searching
         Node currentnode = start;
-        
+
         while (currentnode.neightbourNodes.Count != 0)
         {
             //gcost of current node
@@ -39,7 +40,7 @@ public class PathFinding : Singleton<PathFinding>
                 //calculate all costs
                 int nodehcost = CalculatHCost(neighbour.node.transform.position, finish.transform.position);
                 int nodegcost = localgcost + neighbour.dist;
-                if(nodegcost>neighbour.node.pathnode.gCost)
+                if (nodegcost > neighbour.node.pathnode.gCost)
                 {
                     continue;
                 }
@@ -49,19 +50,19 @@ public class PathFinding : Singleton<PathFinding>
                 neighbour.node.pathnode.hCost = nodehcost;
                 neighbour.node.pathnode.gCost = nodegcost;
                 neighbour.node.pathnode.fCost = nodefcost;
-                neighbour.node.pathnode.fromwheredir=currentnode.whereWeCanGo[i];
+                neighbour.node.pathnode.fromwheredir = currentnode.whereWeCanGo[i];
                 //if we reach the end
                 openList.Add(neighbour.node.pathnode);
                 if (neighbour.node == finish)
                 {
                     closedList.Add(currentnode.pathnode);
                     List<Vector2> dirs = new List<Vector2>();
-                    dirs = Retrack(start.pathnode,neighbour.node.pathnode);
+                    dirs = Retrack(start.pathnode, neighbour.node.pathnode);
                     ResetNodes(ref closedList);
                     ResetNodes(ref openList);
                     return dirs;
                 }
-                
+
             }
             //remove already searched node from the openlist and add it to closedlist
             openList.Remove(currentnode.pathnode);
@@ -71,38 +72,35 @@ public class PathFinding : Singleton<PathFinding>
             {
                 break;
             }
-            //find first node with the lowest cost 
-             currentnode = openList.Find(x => x.fCost <= lowestcost).node;
-            //iIf we can't find good node
-            if (currentnode == null)
+
+
+            lowestcost = int.MaxValue;
+            PathNode currentBest = null;
+            foreach (var pathNode in openList)
             {
-                lowestcost = int.MaxValue;
-                PathNode currentBest=null;
-                foreach (var pathNode in openList)
+                if (pathNode.node.pathnode.fCost <= lowestcost)
                 {
-                    if (pathNode.node.pathnode.fCost <= lowestcost)
-                    {
-                        lowestcost = pathNode.fCost;
-                        currentBest=pathNode;
-                    }
+                    lowestcost = pathNode.fCost;
+                    currentBest = pathNode;
                 }
-                currentnode = currentBest.node;
             }
+            currentnode = currentBest.node;
+
         }
         //checking all nodes and not finding path means that graph was not made properly
         ResetNodes(ref closedList);
         ResetNodes(ref openList);
         throw new System.Exception("Path could not be found");
     }
-    
+
     /// <summary>
     /// returns list of turns needed to take destination
     /// </summary>
     /// <returns></returns>
-    public static List<Vector2> Retrack(PathNode startNode,PathNode finishNode)
+    public List<Vector2> Retrack(PathNode startNode, PathNode finishNode)
     {
         List<Vector2> directions = new List<Vector2>();
-        while (finishNode!=startNode)
+        while (finishNode != startNode)
         {
             Vector2 dir = finishNode.node.pathnode.fromwheredir;
             directions.Insert(0, dir);
@@ -120,8 +118,8 @@ public class PathFinding : Singleton<PathFinding>
         foreach (var node in nodeList)
         {
             node.fCost = int.MaxValue;
-            node.gCost =  int.MaxValue;
-            node.hCost =  int.MaxValue;
+            node.gCost = int.MaxValue;
+            node.hCost = int.MaxValue;
             node.fromWhere = null;
         }
     }
